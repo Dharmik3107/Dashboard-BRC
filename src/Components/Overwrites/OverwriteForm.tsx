@@ -2,8 +2,8 @@ import React from 'react'
 
 import MerchantSplit from './MerchantSplit'
 import MerchantOffer from './MerchantOffer'
-import BlackoutDays from './BlackoutDays'
-import CustomHours from './CustomHours'
+import BlackoutDays from './Blackout Days/BlackoutDays'
+import CustomHours from './CustomHours/CustomHours'
 
 const OverwriteForm:React.FC = () => {
   return (
