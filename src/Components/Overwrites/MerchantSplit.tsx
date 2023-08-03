@@ -9,11 +9,9 @@ const MerchantSplit:React.FC = () => {
         setBalanceSplitInput(100 - merchantsSplitValue)
     } 
   return (
-    <div className='w-full flex flex-col gap-2 justify-center items-center'>
-      <div className='w-full h-fit flex justify-between items-center gap-5 '>
+    <div className='w-full flex gap-5 justify-between items-center'>
         <Select label='Merchant Split' abbr={true} abbrTitle='Marchant Split' remainingSplit={calculateRemainingSplit}/>
         <Input label='' name='merchant-split' value={balanceSplitInput} disabled={true}/>
-      </div>
     </div>
   )
 }
