@@ -3,13 +3,14 @@ import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 //Components
 import MerchantOffer from '../MerchantOffer';
-import { formatDateToAddInBlackDayList } from '../Blackout Days/BlackDayList';
 import PrimaryButton from '../../Commons/PrimaryButton';
 //Store
 import {useAppDispatch} from "../../../Store/hook"
 import { addNewHour } from '../../../Store/CustomHourSlice'
 //Types
 import type { EventDataType } from '../../../Store/CustomHourSlice';
+//Utils
+import formatDateToAddInBlackDayList from '../../../Utils/dateUtils';
 //Styles
 import 'react-datepicker/dist/react-datepicker.css';
 

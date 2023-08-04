@@ -5,23 +5,11 @@
   import SecondaryButton from '../../Commons/SecondaryButton'
   //Assets
   import {ReactComponent as Close} from "../../../assets/Close.svg"
-
+  //Utils
+  import formatDateToAddInBlackDayList from '../../../Utils/dateUtils';
   interface Props {
     blackedDayList: string[],
     setBlackedDayList: Dispatch<SetStateAction<string[]>>
-  }
-
-  //Function to format date from Date object
-  export const formatDateToAddInBlackDayList:(date:Date) => string = (date) => {
-    const month:number = date.getMonth() + 1;
-    const day:number = date.getDate();
-    const year:number = date.getFullYear();
-
-    const paddedMonth:string = month.toString().padStart(2,"0")
-    const paddedDay:string = day.toString().padStart(2,"0")
-    const paddedYear:string = year.toString().padStart(2,"0")
-
-    return `${paddedDay}.${paddedMonth}.${paddedYear}`
   }
 
   const BlackDayList:React.FC<Props> = ({blackedDayList, setBlackedDayList}:Props) => {
