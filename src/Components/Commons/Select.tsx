@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
+//Components
 import SelectMenu from './SelectMenu'
+//Assets
 import { ReactComponent as DropDown } from "../../assets/DropDown.svg"
 import { ReactComponent as Info } from "../../assets/Info.svg"
 
@@ -10,6 +12,7 @@ interface Props {
   remainingSplit: (remainingSplit: number) => void
 }
 
+//Creating number Array with diff of 5 from 0 - 100
 const numberArray: number[] = [...Array(21)].map((_, index) => {
   return index * 5
 })
@@ -19,10 +22,12 @@ const Select: React.FC<Props> = ({ label, abbr, abbrTitle, remainingSplit }: Pro
   const [isSelectMenuOpen, setSelectMenuOpen] = useState<boolean>(false)
   const [currentSelectedValue, setSelectedValue] = useState<number>(0)
 
+  //Function to handle menu click
   const handleSelectMenuClick: () => void = () => {
     setSelectMenuOpen(isSelectMenuOpen => !isSelectMenuOpen)
   }
 
+  //Side effect to calculate remaining split
   useEffect(() => {
     remainingSplit(currentSelectedValue)
   }, [currentSelectedValue, remainingSplit])

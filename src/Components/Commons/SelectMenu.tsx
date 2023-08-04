@@ -6,9 +6,12 @@ interface Props{
 }
 
 const SelectMenu:React.FC<Props> = ({list, setSelectedValue}:Props) => {
-    const handleSelectValueClick:(item:number) => void = (item) => {
-        setSelectedValue(item)
-    }
+
+  //Function to handle value click to set it to state
+  const handleSelectValueClick:(item:number) => void = (item) => {
+    setSelectedValue(item)
+  }
+
   return (
     <div className='absolute top-10 left-0 w-full h-[400px] overflow-y-scroll rounded-md no-scroll'>
       {list.map((item, index) => {

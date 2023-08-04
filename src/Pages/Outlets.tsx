@@ -5,7 +5,7 @@ import Overwrites from '../Components/Overwrites/Overwrites'
 
 const Outlets:React.FC = () => {
   return (
-    <div className='w-full h-full grid grid-cols-[2fr_4fr]'>
+    <div className='w-full h-full grid grid-cols-[2fr_4fr] overflow-y-hidden'>
       <Overwrites />
       <Calender />
     </div>

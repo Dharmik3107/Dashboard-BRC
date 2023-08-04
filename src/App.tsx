@@ -1,6 +1,6 @@
 import React from 'react'
 import {Routes, Route} from "react-router-dom"
-
+//Components
 import Layout from './Pages/Layout'
 import Outlets from './Pages/Outlets'
 

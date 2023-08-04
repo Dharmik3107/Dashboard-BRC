@@ -1,20 +1,24 @@
 import React,{useState, Dispatch, SetStateAction, useEffect } from 'react'
-
+//Components
 import Input from '../Commons/Input'
 
 interface Props {
-  setMerchantOffer?: Dispatch<SetStateAction<number>>
+  setMerchantOffer?: Dispatch<SetStateAction<number>>,
+  merchantOffer?:number
 }
 
-const MerchantOffer:React.FC<Props> = ({setMerchantOffer}:Props) => {
-  const [merchantFundOffer, setMerchantFundOffer] = useState<number>(0)
+const MerchantOffer:React.FC<Props> = ({setMerchantOffer, merchantOffer = 0}:Props) => {
+
+  const [merchantFundOffer, setMerchantFundOffer] = useState<number>(merchantOffer)
   const [customerFundOffer, setCustomerFundOffer] = useState<number>(0)
 
+  //Function to calculate customer fund offer based on merchant fund offer
   const calculateCustomerFundOffer:(merchantFundOffer:number)=> number = (merchantFundOffer) => {
     const result:number = (merchantFundOffer * 28.5) / 35
     return result
   }
 
+  //Side effect to set customer and merchant fund offer
   useEffect(() => {
     if(setMerchantOffer) setMerchantOffer(merchantFundOffer)
     setCustomerFundOffer(calculateCustomerFundOffer(merchantFundOffer))

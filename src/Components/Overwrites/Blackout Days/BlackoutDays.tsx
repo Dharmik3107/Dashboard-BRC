@@ -1,8 +1,8 @@
 import React from 'react'
-
+//Components
 import OfferType from '../OfferType'
 import BlackedDays from './BlackedDays'
-
+//Assets
 import Blackout from "../../../assets/Blackout.svg"
 
 const BlackoutDays:React.FC = () => {

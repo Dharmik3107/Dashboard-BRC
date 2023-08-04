@@ -10,3 +10,5 @@ declare module '*.svg' {
 }
 
 declare module "react-datepicker"
+declare module "react-big-calendar"
+declare module "moment"

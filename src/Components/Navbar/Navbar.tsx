@@ -1,8 +1,8 @@
 import React from 'react'
-
+//Components
 import URLcomponent from './URLcomponent'
 import Profile from './Profile'
-
+//Assets
 import ProfileImage from "../../assets/Profile.png"
 
 const Navbar:React.FC = () => {

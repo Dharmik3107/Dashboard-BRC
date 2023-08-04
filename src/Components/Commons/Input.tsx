@@ -1,5 +1,5 @@
 import React, {InputHTMLAttributes, Dispatch, SetStateAction, ChangeEvent, useState, useEffect} from 'react'
-
+//Assets
 import { ReactComponent as Info } from "../../assets/Info.svg"
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
@@ -11,9 +11,13 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
     setValue?: Dispatch<SetStateAction<number>>
 }
 
+
 const Input:React.FC<Props> = ({label, value, name,abbr,abbrTitle, setValue,  ...otherProps}:Props) => {
+
+  //local state to manage user typings in input element
   const [currentValue, setCurrentValue] = useState<number>(value)
   
+  //Function to handle value change and storing it to local state
   const handleValueChange = (event:ChangeEvent<HTMLInputElement>) => {
     if(Number(event.target.value) >= 0 && Number(event.target.value) <= 100){
       setCurrentValue(Number(event.target.value));
@@ -21,6 +25,7 @@ const Input:React.FC<Props> = ({label, value, name,abbr,abbrTitle, setValue,  ..
     }
   }
 
+  //Updating the local state if props-value has some value 
   useEffect(()=>{
     setCurrentValue(Number(value.toFixed(1)))
   }, [value])

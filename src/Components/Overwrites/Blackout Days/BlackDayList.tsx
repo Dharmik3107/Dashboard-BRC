@@ -1,15 +1,17 @@
   import React, {Dispatch, SetStateAction, useState} from 'react'
   import DatePicker from 'react-datepicker';
   import 'react-datepicker/dist/react-datepicker.css';
-
-  import {ReactComponent as Close} from "../../../assets/Close.svg"
+  //Components
   import SecondaryButton from '../../Commons/SecondaryButton'
+  //Assets
+  import {ReactComponent as Close} from "../../../assets/Close.svg"
 
   interface Props {
     blackedDayList: string[],
     setBlackedDayList: Dispatch<SetStateAction<string[]>>
   }
 
+  //Function to format date from Date object
   export const formatDateToAddInBlackDayList:(date:Date) => string = (date) => {
     const month:number = date.getMonth() + 1;
     const day:number = date.getDate();
@@ -27,8 +29,7 @@
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
 
-    
-
+    //Function handle Date change
     const handleDateChange:(date:Date) => void = (date) => {
       const dateToAdd = formatDateToAddInBlackDayList(date)
       setBlackedDayList([...blackedDayList, dateToAdd])
@@ -36,10 +37,12 @@
       setDatePickerOpen(false);
     };
 
+    //Function to add date picker open state
     const handleAddBlackoutDaysClick:() => void = () => {
       setDatePickerOpen(!isDatePickerOpen);
     }
 
+    //Function to remove date picker
     const handleRemoveBlackoutDayClick:(item:string) => void = (item) => {
       const modifiedList = blackedDayList.filter((ele) => ele !== item)
       setBlackedDayList(modifiedList)
