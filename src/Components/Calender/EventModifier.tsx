@@ -1,8 +1,9 @@
 import React , {useState, Dispatch, SetStateAction} from 'react'
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
+import axios from 'axios';
 //Types
-import type { EventType } from './Calender';
+import { type EventType } from '../../Utils/EventInitialState';
 //Component
 import MerchantOffer from '../Overwrites/MerchantOffer'
 import PrimaryButton from '../Commons/PrimaryButton';
@@ -11,6 +12,8 @@ import { EventDataType, editHour } from '../../Store/CustomHourSlice';
 import { useAppDispatch } from '../../Store/hook';
 //Assets
 import {ReactComponent as Day} from "../../assets/Day.svg"
+//Utils
+import { editHourUrl } from '../../Utils/backend';
 
 interface Props {
   data: EventType,
@@ -89,6 +92,18 @@ const EventModifier:React.FC<Props> = ({data, setModifierOpen}:Props) => {
     setModifierOpen(false)
   }
 
+  const editHourDataInDatabase = async(data:EventType) => {
+    try{
+      const res = await axios.put(`${editHourUrl}`, data )
+      if(res.status === 200){
+        alert("Event edited")
+      }
+    }catch(error){
+      console.error(error)
+    }
+  }
+    
+
   //Function to handle Save changes button click
   const handleSaveChangesClick:() => void = () => {
     if(merchantOffer && startTimeFormatted && endTimeFormatted){
@@ -99,7 +114,16 @@ const EventModifier:React.FC<Props> = ({data, setModifierOpen}:Props) => {
         start:startTime.toISOString(),
         end:endTime.toISOString()
       }
+      const databaseEvent:EventType = {
+        id: data.id,
+        date: data.date,
+        offer: data.offer,
+        start: data.start,
+        end: data.end,
+        title: data.title
+      }
       dispatch(editHour(eventData))
+      editHourDataInDatabase(databaseEvent)
       handleDiscardChangesClick()
     }
     setModifierOpen(false)

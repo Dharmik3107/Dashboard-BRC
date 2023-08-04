@@ -1,6 +1,7 @@
 import React, {useState, Dispatch, SetStateAction} from 'react'
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
+import axios from "axios"
 //Components
 import MerchantOffer from '../MerchantOffer';
 import PrimaryButton from '../../Commons/PrimaryButton';
@@ -13,6 +14,8 @@ import type { EventDataType } from '../../../Store/CustomHourSlice';
 import formatDateToAddInBlackDayList from '../../../Utils/dateUtils';
 //Styles
 import 'react-datepicker/dist/react-datepicker.css';
+import { addNewHourUrl } from '../../../Utils/backend';
+import { EventType } from '../../../Utils/EventInitialState';
 
 interface Props {
 	setSchedulerOpen: Dispatch<SetStateAction<boolean>>
@@ -21,6 +24,9 @@ interface Props {
 const CustomHoursScheduler:React.FC<Props> = ({setSchedulerOpen}:Props) => {
 
 	const dispatch = useAppDispatch()
+
+	//For backend
+	// const [eventData, setEventData] = useState<EventType>(initialEventState)
 
 	//For Display
     const [selectedDateString, setSelectedDateString] = useState<string | null>(null);
@@ -32,7 +38,7 @@ const CustomHoursScheduler:React.FC<Props> = ({setSchedulerOpen}:Props) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [startTime, setStartTime] = useState<Date | null>(null);
     const [endTime, setEndTime] = useState<Date | null>(null);
-
+	// console.log(selectedDateString)
 	//Pop-up Openers
 	const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false)
 	const [isStartTimePickerOpen, setStartTimePickerOpen] = useState<boolean>(false)
@@ -92,12 +98,24 @@ const CustomHoursScheduler:React.FC<Props> = ({setSchedulerOpen}:Props) => {
 		setEndTime(null);
 		setSchedulerOpen(false)
 	}
+	
+	const addNewHourToDatabase = async(data:EventType) => {
+		try{
 
-	//Function to handle Save changes button
+			if(data.id) {
+				const res = await axios.post(`${addNewHourUrl}`,data)
+				if(res.status === 200){
+					alert("Added new hour")
+				}
+			}
+		}catch(error){
+			console.log(error)
+		}
+	}
+	
 	const handleSaveChangesClick:() => void = () => {
 		const id = `${Date.now()}`
-		if(merchantOffer && startTimeString && endTimeString){
-			if(selectedDate && startTime && endTime) {
+		if(merchantOffer && selectedDate && startTime && endTime){
 				const eventData:EventDataType = {
 					id:id,
 					date:selectedDate.toISOString(),
@@ -105,8 +123,18 @@ const CustomHoursScheduler:React.FC<Props> = ({setSchedulerOpen}:Props) => {
 					start:startTime.toISOString(),
 					end:endTime.toISOString()
 				}
+				const databaseEvent:EventType = {
+					id: id,
+					date: selectedDate,
+					start: startTime,
+					end: endTime,
+					offer: merchantOffer,
+					title: "title"
+				}
+				addNewHourToDatabase(databaseEvent)
+				// console.log(eventData, "ev-data")
 				dispatch(addNewHour(eventData))
-			}
+			
 			handleDiscardChangesClick()
 			setSchedulerOpen(false)
 		}

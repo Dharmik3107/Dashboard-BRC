@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from 'react'
 import format from 'date-fns/format'
+import axios from 'axios';
 //Store
 import {useAppDispatch, useAppSelector} from "../../../Store/hook"
-import { removeHour } from '../../../Store/CustomHourSlice'
+import { EventDataType, fetchList, removeHour } from '../../../Store/CustomHourSlice'
 //Components
 import SecondaryButton from '../../Commons/SecondaryButton'
 import CustomHoursScheduler from './CustomHoursScheduler'
 //Assets
 import {ReactComponent as Close} from "../../../assets/Close.svg"
+import { deleteHourUrl, getAllHoursUrl } from '../../../Utils/backend';
+import { EventType } from '../../../Utils/EventInitialState';
 
 export interface CustomHourType {
   id: string,
@@ -31,6 +34,9 @@ const DAYS:DaysType = {
 
 const CustomHoursList:React.FC = () => {
 
+    //For Backend
+    const [eventToBeRemoved, setEventToBeRemoved] = useState<string>("")
+
     const [customHoursList, setCustomHoursList] = useState<CustomHourType[]>([])
     const [isSchedulerOpen, setSchedulerOpen] = useState<boolean>(false);
 
@@ -44,10 +50,53 @@ const CustomHoursList:React.FC = () => {
 
     //Function to handle Scheduler UI remove
     const handleRemoveCustomHourClick:(id:string)=>void = (id) => {
+      setEventToBeRemoved(id)
       dispatch(removeHour(id))
       const filteredList = customHoursList.filter((item) => item.id !== id)
       setCustomHoursList(filteredList)
     }
+
+    useEffect(() => {
+      const fetchBackendData = async() => {
+        try{
+          const res = await axios.get(`${getAllHoursUrl}`)
+          const hourList:EventType[] = res.data.message
+          const data = hourList.map((item) => {
+            const date = new Date(item.date).toISOString();
+            const start = new Date(item.start).toISOString();
+            const end = new Date(item.end).toISOString();
+
+            const event:EventDataType = {
+              id : item.id,
+              date,
+              start,
+              end,
+              offer:item.offer
+            }
+            return event
+          })
+          dispatch(fetchList(data))
+        }catch(error){
+          console.error(error)
+        }
+      }
+      fetchBackendData()
+  
+    },[dispatch])
+
+    useEffect(() => {
+      const removeEventFromDatabase = async() => {
+        try{
+          if(eventToBeRemoved){
+            const res = await axios.delete(`${deleteHourUrl}`, {data: {id: eventToBeRemoved}})
+            if(res.status === 200) alert("Event Deleted")
+          }
+        }catch(error){
+          console.error(error)
+        }
+      }
+      removeEventFromDatabase()
+    }, [eventToBeRemoved])
 
     //Side effect to set custom hours list
     useEffect(() => {

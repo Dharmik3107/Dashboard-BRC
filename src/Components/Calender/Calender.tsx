@@ -1,42 +1,64 @@
 import React, { useState, useEffect } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import axios from 'axios';
 //Component
 import EventModifier from './EventModifier';
 //Store
-import { useAppSelector } from '../../Store/hook';
+import { useAppSelector, useAppDispatch } from '../../Store/hook';
 //styles
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+//Utils
+import { getAllHoursUrl } from '../../Utils/backend';
+import { initialEventState, type EventType } from '../../Utils/EventInitialState';
+import {fetchHours } from '../../Store/CustomHourSlice';
 
 const localizer = momentLocalizer(moment)
 
-export interface EventType {
-  id:string,
-  title: string,
-  start: Date,
-  end:Date,
-  offer: number,
-  date: Date
-}
 
 const Calender:React.FC = () => {
-
-  //Initial State for local state
-  const initialEventState:EventType = {
-    id : "",
-    title : "",
-    start : new Date(),
-    end: new Date(),
-    offer: 0,
-    date: new Date()
-  }
-
   //Fetching list from global state store
   const customHourList = useAppSelector((state) => state.customHour.CustomHoursList) 
+  const eventList = useAppSelector((state) => state.customHour.eventList)
 
   const [currentEvents, setCurrentEvents] = useState<EventType[]>([])
   const [selectedEvent, setSelectedEvent] = useState<EventType>(initialEventState)
   const [isModifierOpen, setModifierOpen] = useState<boolean>(false)
+
+  const dispatch = useAppDispatch()
+  
+  useEffect(() => {
+    const fetchBackendData = async() => {
+      try{
+        const res = await axios.get(`${getAllHoursUrl}`)
+        const hourList:EventType[] = res.data.message
+        dispatch(fetchHours(hourList))
+      }catch(error){
+        console.error(error)
+      }
+    }
+    fetchBackendData()
+
+  },[customHourList,dispatch])
+  console.log(currentEvents)
+  useEffect(()=>{
+    const data = eventList.map((item) => {
+      const date = new Date(item.date);
+      const start = new Date(item.start);
+      const end = new Date(item.end)
+
+      const event:EventType = {
+        id: item.id,
+        title:"No Title",
+        date,
+        start,
+        end,
+        offer:item.offer
+      }
+      return event
+    })
+    setCurrentEvents(data)
+  }, [eventList, dispatch])
 
   //Updating Selected event and opening dialog box to edit the event
   useEffect(() => {
@@ -46,10 +68,8 @@ const Calender:React.FC = () => {
       const end = item.end;
       const offer = item.offer
       const date = new Date(item.date)
-
       return {id:id, title: "No title", start: new Date(start), end: new Date(end), offer, date}
     })
-
     setCurrentEvents(events)
   }, [customHourList, setCurrentEvents])
 
@@ -79,7 +99,6 @@ const Calender:React.FC = () => {
           startAccessor="start"
           endAccessor="end"
           defaultView='week'
-          defaultDate={new Date()} 
           selectable
           style={{height: "100%"}}
           onSelectEvent={handleEvent}

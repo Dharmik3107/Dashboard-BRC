@@ -1,5 +1,6 @@
 import {createSlice, } from "@reduxjs/toolkit"
 import type {PayloadAction} from "@reduxjs/toolkit";
+import { EventType } from "../Utils/EventInitialState";
 
 export interface EventDataType {
     id: string,
@@ -10,10 +11,12 @@ export interface EventDataType {
 }
 export interface CustomHoursListType {
     CustomHoursList: EventDataType[];
+    eventList: EventType[]
 }
 
 const initialState:CustomHoursListType = {
-    CustomHoursList: []
+    CustomHoursList: [],
+    eventList:[]
 }
 
 export const CustomHourSlice = createSlice({
@@ -34,9 +37,16 @@ export const CustomHourSlice = createSlice({
                 if(ele.id === id) return action.payload
                 return ele
             })
+        },
+        fetchList: (state,action:PayloadAction<EventDataType[]>) =>{
+            state.CustomHoursList = action.payload
+        },
+        fetchHours:(state, action:PayloadAction<EventType[]>) =>{
+            state.eventList = action.payload
+            return state
         }
     }
 })
 
-export const {addNewHour, editHour, removeHour} = CustomHourSlice.actions;
+export const {addNewHour, editHour, removeHour,fetchList,fetchHours} = CustomHourSlice.actions;
 export default CustomHourSlice.reducer
